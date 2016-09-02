@@ -5,8 +5,8 @@ $(document).ready(function(){
   $.ajax({
     method: 'GET',
     url: '/api',
+    // error: handleError
     success: handleSuccess,
-    error: handleError
   });
 
   function handleSuccess(json) {
@@ -17,7 +17,7 @@ $(document).ready(function(){
     method: 'GET',
     url: '/api/profile',
     success: handleSuccess,
-    error: handleError
+    // error: handleError
   });
 
   function handleSuccess(json) {
