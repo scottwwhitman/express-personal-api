@@ -44,9 +44,16 @@ app.get('/', function homepage(req, res) {
 
 app.get('/api', function api_index(req, res) {
   // TODO: Document all your api endpoints below
-  var documents = require('./views/documentations');
+  var documents = require('./views/documentations/Api_documentation');
   res.json(documents);
 });
+
+app.get('/api/profile', function api_index(req, res) {
+  // TODO: Document all your api endpoints below
+  var documents = require('./views/documentations/Profile');
+  res.json(documents);
+});
+
 
 /**********
  * SERVER *

@@ -13,5 +13,16 @@ $(document).ready(function(){
     console.log(json)
   }
 
+  $.ajax({
+    method: 'GET',
+    url: '/api/profile',
+    success: handleSuccess,
+    error: handleError
+  });
+
+  function handleSuccess(json) {
+    console.log(json)
+  }
+
 
 });
