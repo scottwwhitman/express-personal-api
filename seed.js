@@ -29,7 +29,7 @@ var divesites_list = [
   image: "",
   place: "Yap",
   country: "Micronesia",
-  animals: ['Micro reef fish', 'White Tip Reef Shark']
+  animals: ['Micro Reef Fish', 'White Tip Reef Shark']
   },
   {
   name: "Stumphtish",
@@ -40,7 +40,7 @@ var divesites_list = [
   animals: ['Manta Ray']
   },
   {
-  name: "Baited Shark Dive",
+  name: "Baited Shark Dive - Aliwal Shoal",
   date: "July 2015",
   image: "",
   place: "Aliwal Shoal",
@@ -48,7 +48,7 @@ var divesites_list = [
   animals: ['Oceanic White Tip Shark', 'Potato Bass']
   },
   {
-  name: "Baited Shark Dive",
+  name: "Baited Shark Dive - Protea Banks",
   date: "August 2015",
   image: "",
   place: "Protea Banks",
@@ -92,7 +92,7 @@ var animals_list = [
     name: "Manta Ray"
   },
   {
-    name: "Oceanic White Tip"
+    name: "Oceanic White Tip Shark"
   },
   {
     name: "Potato Bass"
@@ -124,81 +124,86 @@ db.Place.remove({}, function(err, places) {
         console.log("created", countries.length, "countries");
 
 
-      db.Animal.remove({}, function(err, countries) {
-        console.log('removed all animals');
-        db.Animal.create(animals_list, function(err, animals){
-          if (err) {
-            console.log(err);
-            return;
-          }
-          console.log('recreated all animals');
-          console.log("created", animals.length, "animals");
+        db.Animal.remove({}, function(err, animals) {
+          console.log('removed all animals');
+          db.Animal.create(animals_list, function(err, animals){
+            if (err) {
+              console.log(err);
+              return;
+            }
+            console.log('recreated all animals');
+            console.log("created", animals.length, "animals");
 
 
-        db.Divesite.remove({}, function(err, divesites){
-          console.log('removed all divesites');
-          divesites_list.forEach(function (divesiteData) {
-            var divesite = new db.Divesite({
-              name: divesiteData.name,
-              date: divesiteData.date,
-              image: divesiteData.image
-            });
-            db.Place.findOne({name: divesiteData.place}, function (err, foundPlace) {
-              console.log('found place ' + foundPlace.name + ' for divesite ' + divesite.name);
-              if (err) {
-                console.log(err);
-                return;
-              }
-              divesite.place = foundPlace;
-              divesite.save(function(err, savedDivesite){
-                if (err) {
-                  return console.log(err);
-                }
-                console.log('saved ' + foundPlace.name + ' for ' + savedDivesite.name);
-              });
-            });
-            db.Country.findOne({name: divesiteData.country}, function (err, foundCountry) {
-              console.log('found country ' + foundCountry.name + ' for divesite ' + divesite.name);
-              if (err) {
-                console.log(err);
-                return;
-              }
-              divesite.country = foundCountry;
-              divesite.save(function(err, savedDivesite){
-                if (err) {
-                  return console.log(err);
-                }
-                console.log('saved ' + foundCountry.name + ' for ' + savedDivesite.name);
-              });
-            });
-            db.Animal.findOne({name: divesiteData.animals}, function (err, foundAnimal) {
-              console.log('found animal ' + foundAnimal.name + ' for divesite ' + divesite.name);
-              if (err) {
-                console.log(err);
-                return;
-              }
-              // THIS MAY NOT WORK
-              divesite.animals.push(foundAnimal);
-              divesite.save(function(err, savedDivesite){
-                if (err) {
-                  return console.log(err);
-                }
-                console.log('saved ' + foundAnimal.name + ' for ' + savedDivesite.name);
-                process.exit();
-              });
-            });
+            db.Divesite.remove({}, function(err, divesites) {
+              console.log('removed all divesites');
+              // db.Divesite.create(divesites_list, function(err, divesites){
+              //   if (err) {
+              //     console.log(err);
+              //     return;
+              //   }
+              //   console.log('recreated all divesites');
+              //   console.log("created", divesites.length, "divesites");
+                divesites_list.forEach(function (divesiteData) {
+                  var divesite = new db.Divesite({
+                    name: divesiteData.name,
+                    date: divesiteData.date,
+                    image: divesiteData.image
+                  });
+                  db.Place.findOne({name: divesiteData.place}, function (err, foundPlace) {
+                    console.log('found place ' + foundPlace.name + ' for divesite ' + divesite.name);
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+                    divesite.place = foundPlace;
+                    divesite.save(function(err, savedDivesite){
+                      if (err) {
+                        return console.log(err);
+                      }
+                      console.log('saved ' + foundPlace.name + ' for ' + savedDivesite.name);
+                    });
+                  });
+                  db.Country.findOne({name: divesiteData.country}, function (err, foundCountry) {
+                    console.log('found country ' + foundCountry.name + ' for divesite ' + divesite.name);
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+                    divesite.country = foundCountry;
+                    divesite.save(function(err, savedDivesite){
+                      if (err) {
+                        return console.log(err);
+                      }
+                      console.log('saved ' + foundCountry.name + ' for ' + savedDivesite.name);
+                    });
+                  });
 
+
+                  db.Animal.findOne({name: {$in: divesiteData.animals}}, function (err, foundAnimal) {
+                    console.log('found animal ' + foundAnimal.name + ' for divesite ' + divesite.name);
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+                    // THIS MAY NOT WORK
+                    divesite.animals.push(foundAnimal);
+                    divesite.save(function(err, savedDivesite){
+                      if (err) {
+                        return console.log(err);
+                      }
+                      console.log('saved ' + foundAnimal.name + ' for ' + savedDivesite.name);
+                    });
+                  });
+
+
+                });
+              // });
+            });
           });
         });
-
-
       });
     });
-
-
-    });
   });
-
-
-  });
+  // process.exit();
 });

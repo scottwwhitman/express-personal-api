@@ -8,9 +8,12 @@ var DivesiteSchema = new Schema({
   name: String,
   date: Date,
   image: String,
-  place: {type: Schema.Types.ObjectId, ref: 'Location'},
+  // place: String,
+  // country: String,
+  // animals: [String]
+  place: {type: Schema.Types.ObjectId, ref: 'Place'},
   country: {type: Schema.Types.ObjectId, ref: 'Country'},
-  animals: [{type: Schema.Types.ObjectId, ref: 'Animal', sightings: ''}]
+  animals: [{type: Schema.Types.ObjectId, ref: 'Animal'}]
 });
 
 var Divesite = mongoose.model('Divesite', DivesiteSchema);
