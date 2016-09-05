@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 var DivesiteSchema = new Schema({
   name: String,
-  date: Date,
+  date: String,
   image: String,
   // place: String,
   // country: String,

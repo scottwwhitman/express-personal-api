@@ -59,14 +59,16 @@ app.get('/api/profile', function api_index(req, res) {
 // get all divesites
 app.get('/api/divesites', function (req, res) {
   // send all divesites as JSON response
-  db.Divesite.find().populate('place')
-  db.Divesite.find().populate('country')
-  db.Divesite.find().populate('animals')
+  db.Divesite.find()
+    .populate('place')
+    .populate('country')
+    .populate('animals')
     .exec(function(err, divesites) {
       if (err) { return console.log("index error: " + err); }
       res.json(divesites);
   });
 });
+
 
 // get one divesite
 app.get('/api/divesites/:id', function (req, res) {
@@ -109,8 +111,8 @@ app.post('/api/divesites', function (req, res) {
           if (err) {
             return console.log("save error: " + err);
           }
-          console.log("saved ", divesiteData.name);
-          // send back the book!
+          // console.log("saved ", divesiteData.name);
+          // send back the divesite!
           res.json(divesite);
         });
       });

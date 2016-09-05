@@ -22,11 +22,104 @@
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <h1>Under Construction</h1>
-          <h4><a href="/api">Read My API Documentation</a></h4>
-          <h4><a href="/api/profile">Profile</a></h4>
+          <h1 class="text-center">Scott's Greatest Dive Sites API</h1>
+          <h3><a href="/api">Read My Dive Site API Documentation Here</a></h3>
+          <h3>Profile information:</h3>
+          <div id='profileTarget'>
+            <!-- handlebars template -->
+            <script id="profile-template" type="text/x-handlebars-template">
+              <p><b>Name: </b>{{name}}</p>
+              <p><b>City: </b>{{currentCity}}</p>
+              <p><b>Pets: </b>{{pets}}</p>
+              <a href="{{githubLink}}">Github Link</a><br>
+              <a href="{{personalSiteLink}}">Personal Website Link</a>
+            </script>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <hr>
+
+          <form class="form-inline" id="newDivesiteForm">
+            <div class="form-group">
+              <label for="name" id="divesiteLabel">Divesite Name</label>
+              <input type="text" class="form-control" name="name" placeholder="Name" id="divesiteInput">
+            </div>
+            <div class="form-group">
+              <label for="place" id="placeLabel">Place</label>
+              <input type="text" class="form-control" name="place" placeholder="Place" id="placeInput">
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+              <label for="country" id="countryLabel">Country</label>
+              <input type="text" class="form-control" name="country" placeholder="Country" id="countryInput">
+            </div>
+            <div class="form-group">
+              <label for="date" id="dateLabel">Date Last Visited</label>
+              <input type="text" class="form-control" name="date" placeholder="Month Year" id="dateInput">
+            </div>
+            <br>
+            <br>
+            <button type="submit" class="btn btn-default" id="createDivesite">Create divesite</button>
+            <!-- <button type="submit" class="btn btn-default" id="updateDivesite">Update date visited</button> -->
+          </form>
+          <hr>
+
+          <form class="form-inline" id="newPlaceForm">
+            <div class="form-group">
+              <label for="newPlace" id="newPlaceLabel">New Place</label>
+              <input type="text" class="form-control" name="newPlace" placeholder="Place" id="newPlaceInput">
+            </div>
+            <button type="submit" class="btn btn-default" id="createNewPlace">Add Place</button>
+          </form>
+          <br>
+          <form class="form-inline" id="newCountryForm">
+            <div class="form-group">
+              <label for="newCountry" id="newCountryLabel">New Country</label>
+              <input type="text" class="form-control" name="newCountry" placeholder="Country" id="newCountryInput">
+            </div>
+            <button type="submit" class="btn btn-default" id="createNewCountry">Add Country</button>
+          </form>
+          <br>
+          <form class="form-inline" id="newAnimalForm">
+            <div class="form-group">
+              <label for="newAnimal" id="newAnimalLabel">New Animal</label>
+              <input type="text" class="form-control" name="newAnimal" placeholder="Animal" id="newAnimalInput">
+            </div>
+            <button type="submit" class="btn btn-default" id="createNewAnimal">Add Animal</button>
+          </form>
+
+          <div id='divesiteTarget'>
+            <!-- handlebars template -->
+            <script id="divesite-template" type="text/x-handlebars-template">
+              {{#each divesites}}
+              <hr>
+              <p>
+                <b>{{name}}</b> at {{place.name}}, {{country.name}}
+                <br>
+                <b>Date last visited:</b> {{date}}
+                <br>
+                <b>Animals:</b>
+                {{#each animals}}
+                  {{name}},
+                {{/each}}
+                <button type="button" name="button" class="deleteBtn btn btn-danger pull-right" data-id={{_id}}>Delete</button>
+              </p>
+              <form class="form-inline" id="addAnimalForm" data-id={{_id}}>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="name" placeholder="Animal">
+                </div>
+                <button type="submit" class="btn btn-default">Add animal</button>
+              </form>
+              {{/each}}
+            </script>
+          </div>
+
         </div>
       </div>
     </div>
+
   </body>
 </html>

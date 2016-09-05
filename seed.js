@@ -40,7 +40,7 @@ var divesites_list = [
   animals: ['Manta Ray']
   },
   {
-  name: "Baited Shark Dive - Aliwal Shoal",
+  name: "Baited Shark Dive",
   date: "July 2015",
   image: "",
   place: "Aliwal Shoal",
@@ -48,7 +48,7 @@ var divesites_list = [
   animals: ['Oceanic White Tip Shark', 'Potato Bass']
   },
   {
-  name: "Baited Shark Dive - Protea Banks",
+  name: "Baited Shark Dive",
   date: "August 2015",
   image: "",
   place: "Protea Banks",
