@@ -9,6 +9,16 @@ h1 {
   text-align: center;
 }
 
+#divesiteImage {
+  width: 200px;
+  margin-right: 25px;
+  margin-top: -50px;
+}
+
+#animalsSeenTitle {
+  width: 425px;
+}
+
 #divesiteLabel {
 }
 
@@ -42,6 +52,8 @@ h1 {
 #createDivesite {
   margin-left: 265px;
   width: 200px;
+  background-color: green;
+  color: white;
 }
 
 #updateDivesite {
@@ -61,13 +73,31 @@ h1 {
 }
 
 #createNewPlace {
-  width: 150px;
+  width: 100px;
+  background-color: green;
+  color: white;
 }
 
 #createNewCountry {
-  width: 150px;
+  width: 100px;
+  background-color: green;
+  color: white;
 }
 
 #createNewAnimal {
-  width: 150px;
+  width: 100px;
+  background-color: green;
+  color: white;
+}
+
+#addAnimalButton {
+  width: 100px;
+  background-color: gray;
+  color: white;
+}
+
+#updateDateButton {
+  width: 100px;
+  background-color: gray;
+  color: white;
 }

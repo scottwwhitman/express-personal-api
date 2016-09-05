@@ -186,7 +186,6 @@ db.Place.remove({}, function(err, places) {
                       console.log(err);
                       return;
                     }
-                    // THIS MAY NOT WORK
                     divesite.animals.push(foundAnimal);
                     divesite.save(function(err, savedDivesite){
                       if (err) {

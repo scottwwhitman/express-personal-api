@@ -125,17 +125,115 @@ $(document).ready(function(){
     renderDivesites();
   }
 
+  $('#newPlaceForm').on('submit', function(e) {
+    e.preventDefault();
+    console.log('new place serialized', $(this).serializeArray());
+    $.ajax({
+      method: 'POST',
+      url: '/api/places',
+      data: $(this).serializeArray(),
+      success: newPlaceSuccess,
+      // error: newBookError
+    });
+  });
+
+  function newPlaceSuccess(json) {
+    $('#newPlaceForm input').val('');
+    console.log(json);
+  }
+
+  $('#newCountryForm').on('submit', function(e) {
+    e.preventDefault();
+    console.log('new country serialized', $(this).serializeArray());
+    $.ajax({
+      method: 'POST',
+      url: '/api/countries',
+      data: $(this).serializeArray(),
+      success: newCountrySuccess,
+      // error: newBookError
+    });
+  });
+
+  function newCountrySuccess(json) {
+    $('#newCountryForm input').val('');
+    console.log(json);
+  }
+
+  $('#newAnimalForm').on('submit', function(e) {
+    e.preventDefault();
+    console.log('new animal serialized', $(this).serializeArray());
+    $.ajax({
+      method: 'POST',
+      url: '/api/animals',
+      data: $(this).serializeArray(),
+      success: newAnimalSuccess,
+      // error: newBookError
+    });
+  });
+
+  function newAnimalSuccess(json) {
+    $('#newAnimalForm input').val('');
+    console.log(json);
+  }
+
   $divesitesList.on('submit', '#addAnimalForm', function(e) {
     e.preventDefault();
     console.log('new animals');
     $.ajax({
-      method: 'POST',
-      url: '/api/books/'+$(this).attr('data-id')+'/characters',
+      method: 'PUT',
+      url: '/api/divesites/'+$(this).attr('data-id')+'/animals',
       data: $(this).serializeArray(),
-      success: newCharacterSuccess,
-      error: newCharacterError
+      success: newDivesiteAnimalSuccess,
+      // error: newDivesiteAnimalError
     });
   });
+
+  function newDivesiteAnimalSuccess(json) {
+    $('#addAnimalForm input').val('');
+    console.log(json);
+    var divesite = json;
+    var divesiteId = divesite._id;
+    console.log('update divesite', divesiteId);
+    // find the divesite with the correct ID and update it in the allDivesites array
+    for(var index = 0; index < allDivesites.length; index++) {
+      if(allDivesites[index]._id === divesiteId) {
+        allDivesites[index] = divesite;
+        console.log(allDivesites);
+        break;  // we found our divesite - no reason to keep searching (this is why we didn't use forEach)
+      }
+    }
+    renderDivesites();
+  }
+
+  $divesitesList.on('submit', '#updateDateForm', function(e) {
+    e.preventDefault();
+    console.log('new date');
+    $.ajax({
+      method: 'PUT',
+      url: '/api/divesites/'+$(this).attr('data-id')+'',
+      data: $(this).serializeArray(),
+      success: newDivesiteDateSuccess,
+      // error: newDivesiteAnimalError
+    });
+  });
+
+  function newDivesiteDateSuccess(json) {
+    $('#updateDateForm input').val('');
+    console.log(json);
+    var divesite = json;
+    var divesiteId = divesite._id;
+    console.log('update divesite', divesiteId);
+    // find the divesite with the correct ID and update it in the allDivesites array
+    for(var index = 0; index < allDivesites.length; index++) {
+      if(allDivesites[index]._id === divesiteId) {
+        allDivesites[index] = divesite;
+        console.log(allDivesites);
+        break;  // we found our divesite - no reason to keep searching (this is why we didn't use forEach)
+      }
+    }
+    renderDivesites();
+  }
+
 
 
 

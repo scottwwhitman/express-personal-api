@@ -39,8 +39,11 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <hr>
 
+          <hr>
+          <h3>DIVESITES - create a new divesite:</h3>
+          <h4>Note: if adding a new place or country, first add to the database in the next section.</h4>
+          <br>
           <form class="form-inline" id="newDivesiteForm">
             <div class="form-group">
               <label for="name" id="divesiteLabel">Divesite Name</label>
@@ -65,28 +68,31 @@
             <button type="submit" class="btn btn-default" id="createDivesite">Create divesite</button>
             <!-- <button type="submit" class="btn btn-default" id="updateDivesite">Update date visited</button> -->
           </form>
-          <hr>
 
+          <hr>
+          <h3>DATABASE - add new places, countries and animals:</h3>
+          <h4>Note: if you can't add a new animal to a divesite, first add them to the database</h4>
+          <br>
           <form class="form-inline" id="newPlaceForm">
             <div class="form-group">
-              <label for="newPlace" id="newPlaceLabel">New Place</label>
-              <input type="text" class="form-control" name="newPlace" placeholder="Place" id="newPlaceInput">
+              <label for="name" id="newPlaceLabel">New Place</label>
+              <input type="text" class="form-control" name="name" placeholder="Place" id="newPlaceInput">
             </div>
             <button type="submit" class="btn btn-default" id="createNewPlace">Add Place</button>
           </form>
           <br>
           <form class="form-inline" id="newCountryForm">
             <div class="form-group">
-              <label for="newCountry" id="newCountryLabel">New Country</label>
-              <input type="text" class="form-control" name="newCountry" placeholder="Country" id="newCountryInput">
+              <label for="name" id="newCountryLabel">New Country</label>
+              <input type="text" class="form-control" name="name" placeholder="Country" id="newCountryInput">
             </div>
             <button type="submit" class="btn btn-default" id="createNewCountry">Add Country</button>
           </form>
           <br>
           <form class="form-inline" id="newAnimalForm">
             <div class="form-group">
-              <label for="newAnimal" id="newAnimalLabel">New Animal</label>
-              <input type="text" class="form-control" name="newAnimal" placeholder="Animal" id="newAnimalInput">
+              <label for="name" id="newAnimalLabel">New Animal</label>
+              <input type="text" class="form-control" name="name" placeholder="Animal" id="newAnimalInput">
             </div>
             <button type="submit" class="btn btn-default" id="createNewAnimal">Add Animal</button>
           </form>
@@ -97,21 +103,29 @@
               {{#each divesites}}
               <hr>
               <p>
-                <b>{{name}}</b> at {{place.name}}, {{country.name}}
+                <h4><b>{{name}}</b> at {{place.name}}, {{country.name}}</h4>
                 <br>
                 <b>Date last visited:</b> {{date}}
                 <br>
-                <b>Animals:</b>
+                <p id="animalsSeenTitle"><b>Animals seen:</b>
                 {{#each animals}}
                   {{name}},
-                {{/each}}
+                {{/each}}</p>
                 <button type="button" name="button" class="deleteBtn btn btn-danger pull-right" data-id={{_id}}>Delete</button>
+                <img src="images/{{image}}" class="pull-right" id="divesiteImage">
               </p>
               <form class="form-inline" id="addAnimalForm" data-id={{_id}}>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="name" placeholder="Animal">
+                  <input type="text" class="form-control" name="animal" placeholder="Animal">
                 </div>
-                <button type="submit" class="btn btn-default">Add animal</button>
+                <button type="submit" class="btn btn-default" id="addAnimalButton">Add animal</button>
+              </form>
+              <br>
+              <form class="form-inline" id="updateDateForm" data-id={{_id}}>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="date" placeholder="Month Year">
+                </div>
+                <button type="submit" class="btn btn-default" id="updateDateButton">Update date</button>
               </form>
               {{/each}}
             </script>

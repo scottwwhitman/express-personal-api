@@ -120,19 +120,71 @@ app.post('/api/divesites', function (req, res) {
   });
 });
 
-// update date visited a divesite
-app.put('/api/divesites/:id', function (req, res) {
-  // set the value of the divesite id
-  var divesiteId = req.params.id;
-  // find divesite in db by id
-  db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
-    // update divesite date with data from request body
-    foundDivesite.date = req.body.date;
-    foundDivesite.save(function (err, savedDivesite) {
-      res.json(savedDivesite);
-    });
+// create new place
+app.post('/api/places', function (req, res) {
+  // create new place with form data (`req.body`)
+  var newPlace = new db.Place({
+    name: req.body.name
+  });
+  // save newPlace to database
+  newPlace.save(function(err, place){
+    if (err) {
+      return console.log("save error: " + err);
+    }
+    console.log("saved ", newPlace.name);
+    // send back the place!
+    res.json(place);
   });
 });
+
+// create new country
+app.post('/api/countries', function (req, res) {
+  // create new country with form data (`req.body`)
+  var newCountry = new db.Country({
+    name: req.body.name
+  });
+  // save newCountry to database
+  newCountry.save(function(err, country){
+    if (err) {
+      return console.log("save error: " + err);
+    }
+    console.log("saved ", newCountry.name);
+    // send back the country!
+    res.json(country);
+  });
+});
+
+// create new animal
+app.post('/api/animals', function (req, res) {
+  // create new animal with form data (`req.body`)
+  var newAnimal = new db.Animal({
+    name: req.body.name
+  });
+  // save newAnimal to database
+  newAnimal.save(function(err, animal){
+    if (err) {
+      return console.log("save error: " + err);
+    }
+    console.log("saved ", newAnimal.name);
+    // send back the animal!
+    res.json(animal);
+  });
+});
+
+
+// // update date visited a divesite
+// app.put('/api/divesites/:id', function (req, res) {
+//   // set the value of the divesite id
+//   var divesiteId = req.params.id;
+//   // find divesite in db by id
+//   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
+//     // update divesite date with data from request body
+//     foundDivesite.date = req.body.date;
+//     foundDivesite.save(function (err, savedDivesite) {
+//       res.json(savedDivesite);
+//     });
+//   });
+// });
 
 
 // delete divesite
@@ -147,9 +199,9 @@ app.delete('/api/divesites/:id', function (req, res) {
 });
 
 // get all animals seen at a divesite
-app.get('/api/divesites/:divesite_id/animals', function (req, res) {
+app.get('/api/divesites/:id/animals', function (req, res) {
   // get divesite id
-  var divesiteId = req.params.divesite_id;
+  var divesiteId = req.params.id;
   // send all animals as JSON response
   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
     foundDivesite.find().populate('animals')
@@ -161,19 +213,60 @@ app.get('/api/divesites/:divesite_id/animals', function (req, res) {
 });
 
 // add an animal seen at a divesite
-app.put('/api/divesites/:divesite_id/animals', function (req, res) {
-  // set the value of the divesite id
-  var divesiteId = req.params.divesite_id;
+app.put('/api/divesites/:id/animals', function (req, res) {
+  // set the value of the divesite id and animal update
+  console.log(req.body);
+  var divesiteId = req.params.id;
   var animalUpdate = req.body.animal;
   // find divesite in db by id
   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
-    // update divesite date with data from request body
-    foundDivesite.animal.push(animalUpdate);
-    foundDivesite.save(function (err, savedDivesite) {
-      res.json(savedDivesite);
+    // find animal in db by name
+    db.Animal.findOne({name: animalUpdate}, function (err, foundAnimal) {
+      // update divesite date with data from request body
+      foundDivesite.animals.push(foundAnimal);
+      foundDivesite.save(function(){
+        db.Divesite.findById(divesiteId)
+        .populate('place')
+        .populate('country')
+        .populate('animals')
+        .exec(function(err, divesite) {
+          if (err) { return console.log("index error: " + err); }
+        // console.log("saved ", divesiteData.name);
+        // send back the divesite!
+        res.json(divesite);
+        });
+      });
     });
   });
 });
+
+// update date last visited at a divesite
+app.put('/api/divesites/:id', function (req, res) {
+  // set the value of the divesite id and date update
+  console.log(req.body);
+  var divesiteId = req.params.id;
+  var dateUpdate = req.body.date;
+  // find divesite in db by id
+  db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
+    // find animal in db by name
+    foundDivesite.date = dateUpdate;
+    foundDivesite.save(function(){
+      db.Divesite.findById(divesiteId)
+      .populate('place')
+      .populate('country')
+      .populate('animals')
+      .exec(function(err, divesite) {
+        if (err) { return console.log("index error: " + err); }
+      // console.log("saved ", divesiteData.name);
+      // send back the divesite!
+      res.json(divesite);
+      });
+    });
+  });
+});
+
+
+
 
 
 /**********
