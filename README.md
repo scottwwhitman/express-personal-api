@@ -47,7 +47,7 @@
 
 ## Screenshots
 * API start screen with documentation link, profile link and divesite creator:
-<img src="images/startscreen.png">
+<img src="public/images/startscreen.png">
 
 * API database inputs and divesites:
-<img src="images/divesites.png">
+<img src="public/images/divesites.png">
