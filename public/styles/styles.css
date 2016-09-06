@@ -90,14 +90,8 @@ h1 {
   color: white;
 }
 
-#addAnimalButton {
-  width: 100px;
-  background-color: gray;
-  color: white;
-}
-
-#updateDateButton {
-  width: 100px;
+.updateButtons {
+  width: 120px;
   background-color: gray;
   color: white;
 }

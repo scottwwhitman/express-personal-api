@@ -8,17 +8,24 @@ var allProfile;
 
 $(document).ready(function(){
 
+  // API call for site documentation
   $.ajax({
     method: 'GET',
     url: '/api',
-    // error: handleDocumentationError
-    success: handleDocumentationSuccess,
+    error: handleDocumentationError,
+    success: handleDocumentationSuccess
   });
 
   function handleDocumentationSuccess(json) {
     // console.log(json)
   };
 
+  function handleDocumentationError(e) {
+    console.log('Failed to load documentation');
+  }
+
+
+  // Setting handlebars target variables
   $divesitesList = $('#divesiteTarget');
   $profileList = $('#profileTarget');
 
@@ -30,17 +37,23 @@ $(document).ready(function(){
   var profileSource = $('#profile-template').html();
   profileTemplate = Handlebars.compile(profileSource);
 
+
+  // API call for all profile info
   $.ajax({
     method: 'GET',
     url: '/api/profile',
     success: handleProfileSuccess,
-    // error: handleProfileError
+    error: handleProfileError
   });
 
   function handleProfileSuccess(json) {
     // console.log(json);
     allProfile = json;
     renderProfile();
+  }
+
+  function handleProfileError(e) {
+    console.log('Failed to load profile');
   }
 
   function renderProfile () {
@@ -56,15 +69,17 @@ $(document).ready(function(){
     $profileList.append(profileHtml);
   }
 
+
+  // API call for all divesites
   $.ajax({
     method: 'GET',
     url: '/api/divesites',
     success: handleSuccess,
-    // error: handleError
+    error: handleError
   });
 
   // helper function to render all posts to view
-  // note: we empty and re-render the collection each time our post data changes
+  // note: we empty and re-render the collection each time our post or update data changes
   function renderDivesites () {
     // empty existing posts from view
     $divesitesList.empty();
@@ -82,6 +97,13 @@ $(document).ready(function(){
     console.log(allDivesites);
   }
 
+  function handleError(e) {
+    console.log('uh oh');
+    $divesitesList.text('Failed to load divesites, is the server working?');
+  }
+
+
+  // API call to add a new divesite
   $('#newDivesiteForm').on('submit', function(e) {
     e.preventDefault();
     console.log('new divesite serialized', $(this).serializeArray());
@@ -90,7 +112,7 @@ $(document).ready(function(){
       url: '/api/divesites',
       data: $(this).serializeArray(),
       success: newDivesiteSuccess,
-      // error: newBookError
+      error: newDivesiteError
     });
   });
 
@@ -100,13 +122,19 @@ $(document).ready(function(){
     renderDivesites();
   }
 
+  function newDivesiteError(e) {
+    console.log('Failed to add new divesite');
+  }
+
+
+  // API call to delete a divesite
   $divesitesList.on('click', '.deleteBtn', function() {
     console.log('clicked delete button to', '/api/divesites/'+$(this).attr('data-id'));
     $.ajax({
       method: 'DELETE',
       url: '/api/divesites/'+$(this).attr('data-id'),
       success: deleteDivesiteSuccess,
-      // error: deleteBookError
+      error: deleteDivesiteError
     });
   });
 
@@ -125,6 +153,12 @@ $(document).ready(function(){
     renderDivesites();
   }
 
+  function deleteDivesiteError(e) {
+    console.log('Failed to delete divesite');
+  }
+
+
+  // API call to add a new place
   $('#newPlaceForm').on('submit', function(e) {
     e.preventDefault();
     console.log('new place serialized', $(this).serializeArray());
@@ -133,7 +167,7 @@ $(document).ready(function(){
       url: '/api/places',
       data: $(this).serializeArray(),
       success: newPlaceSuccess,
-      // error: newBookError
+      error: newPlaceError
     });
   });
 
@@ -142,6 +176,12 @@ $(document).ready(function(){
     console.log(json);
   }
 
+  function newPlaceError(e) {
+    console.log('Failed to add new place');
+  }
+
+
+  // API call to add a new country
   $('#newCountryForm').on('submit', function(e) {
     e.preventDefault();
     console.log('new country serialized', $(this).serializeArray());
@@ -150,7 +190,7 @@ $(document).ready(function(){
       url: '/api/countries',
       data: $(this).serializeArray(),
       success: newCountrySuccess,
-      // error: newBookError
+      error: newCountryError
     });
   });
 
@@ -159,6 +199,12 @@ $(document).ready(function(){
     console.log(json);
   }
 
+  function newCountryError(e) {
+    console.log('Failed to add new country');
+  }
+
+
+  // API call to add a new animal
   $('#newAnimalForm').on('submit', function(e) {
     e.preventDefault();
     console.log('new animal serialized', $(this).serializeArray());
@@ -167,7 +213,7 @@ $(document).ready(function(){
       url: '/api/animals',
       data: $(this).serializeArray(),
       success: newAnimalSuccess,
-      // error: newBookError
+      error: newAnimalError
     });
   });
 
@@ -176,6 +222,12 @@ $(document).ready(function(){
     console.log(json);
   }
 
+  function newAnimalError(e) {
+    console.log('Failed to add new animal');
+  }
+
+
+  // API call to add a new animal to a divesite
   $divesitesList.on('submit', '#addAnimalForm', function(e) {
     e.preventDefault();
     console.log('new animals');
@@ -184,7 +236,7 @@ $(document).ready(function(){
       url: '/api/divesites/'+$(this).attr('data-id')+'/animals',
       data: $(this).serializeArray(),
       success: newDivesiteAnimalSuccess,
-      // error: newDivesiteAnimalError
+      error: newDivesiteAnimalError
     });
   });
 
@@ -205,15 +257,21 @@ $(document).ready(function(){
     renderDivesites();
   }
 
+  function newDivesiteAnimalError(e) {
+    console.log('Failed to add new animal to divesite');
+  }
+
+
+  // API call to update the date visited a divesite
   $divesitesList.on('submit', '#updateDateForm', function(e) {
     e.preventDefault();
     console.log('new date');
     $.ajax({
       method: 'PUT',
-      url: '/api/divesites/'+$(this).attr('data-id')+'',
+      url: '/api/divesites/'+$(this).attr('data-id')+'/date',
       data: $(this).serializeArray(),
       success: newDivesiteDateSuccess,
-      // error: newDivesiteAnimalError
+      error: newDivesiteDateError
     });
   });
 
@@ -234,9 +292,44 @@ $(document).ready(function(){
     renderDivesites();
   }
 
+  function newDivesiteDateError(e) {
+    console.log('Failed to update divesite date');
+  }
 
 
+  // API call to update the image for a divesite
+  $divesitesList.on('submit', '#updateImageForm', function(e) {
+    e.preventDefault();
+    console.log('new image');
+    $.ajax({
+      method: 'PUT',
+      url: '/api/divesites/'+$(this).attr('data-id')+'/image',
+      data: $(this).serializeArray(),
+      success: newDivesiteImageSuccess,
+      error: newDivesiteImageError
+    });
+  });
 
+  function newDivesiteImageSuccess(json) {
+    $('#updateImageForm input').val('');
+    console.log(json);
+    var divesite = json;
+    var divesiteId = divesite._id;
+    console.log('update divesite', divesiteId);
+    // find the divesite with the correct ID and update it in the allDivesites array
+    for(var index = 0; index < allDivesites.length; index++) {
+      if(allDivesites[index]._id === divesiteId) {
+        allDivesites[index] = divesite;
+        console.log(allDivesites);
+        break;  // we found our divesite - no reason to keep searching (this is why we didn't use forEach)
+      }
+    }
+    renderDivesites();
+  }
+
+  function newDivesiteImageError(e) {
+    console.log('Failed to update divesite image');
+  }
 
 
 });

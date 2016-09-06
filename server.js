@@ -69,10 +69,12 @@ app.get('/api/divesites', function (req, res) {
   });
 });
 
-
 // get one divesite
 app.get('/api/divesites/:id', function (req, res) {
-  db.Divesite.findOne({_id: req.params._id }, function(err, divesite) {
+  var divesiteId = req.params.id;
+  // find divesite in db by id
+  db.Divesite.findOne({_id: divesiteID}, function(err, divesite) {
+    if (err) { return console.log("index error: " + err); }
     res.json(divesite);
   });
 });
@@ -83,7 +85,7 @@ app.post('/api/divesites', function (req, res) {
   var newDivesite = new db.Divesite({
     name: req.body.name,
     date: req.body.date,
-    image: req.body.image
+    image: ""
   });
   // find the place from req.body
   db.Place.findOne({name: req.body.place}, function(err, place){
@@ -111,7 +113,6 @@ app.post('/api/divesites', function (req, res) {
           if (err) {
             return console.log("save error: " + err);
           }
-          // console.log("saved ", divesiteData.name);
           // send back the divesite!
           res.json(divesite);
         });
@@ -171,22 +172,6 @@ app.post('/api/animals', function (req, res) {
   });
 });
 
-
-// // update date visited a divesite
-// app.put('/api/divesites/:id', function (req, res) {
-//   // set the value of the divesite id
-//   var divesiteId = req.params.id;
-//   // find divesite in db by id
-//   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
-//     // update divesite date with data from request body
-//     foundDivesite.date = req.body.date;
-//     foundDivesite.save(function (err, savedDivesite) {
-//       res.json(savedDivesite);
-//     });
-//   });
-// });
-
-
 // delete divesite
 app.delete('/api/divesites/:id', function (req, res) {
   // get divesite id from url params (`req.params`)
@@ -220,9 +205,11 @@ app.put('/api/divesites/:id/animals', function (req, res) {
   var animalUpdate = req.body.animal;
   // find divesite in db by id
   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
+    if (err) { return console.log("index error: " + err); }
     // find animal in db by name
     db.Animal.findOne({name: animalUpdate}, function (err, foundAnimal) {
-      // update divesite date with data from request body
+      if (err) { return console.log("index error: " + err); }
+      // update divesite animals with data from request body
       foundDivesite.animals.push(foundAnimal);
       foundDivesite.save(function(){
         db.Divesite.findById(divesiteId)
@@ -231,7 +218,6 @@ app.put('/api/divesites/:id/animals', function (req, res) {
         .populate('animals')
         .exec(function(err, divesite) {
           if (err) { return console.log("index error: " + err); }
-        // console.log("saved ", divesiteData.name);
         // send back the divesite!
         res.json(divesite);
         });
@@ -241,14 +227,15 @@ app.put('/api/divesites/:id/animals', function (req, res) {
 });
 
 // update date last visited at a divesite
-app.put('/api/divesites/:id', function (req, res) {
+app.put('/api/divesites/:id/date', function (req, res) {
   // set the value of the divesite id and date update
   console.log(req.body);
   var divesiteId = req.params.id;
   var dateUpdate = req.body.date;
   // find divesite in db by id
   db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
-    // find animal in db by name
+    if (err) { return console.log("index error: " + err); }
+    // update divesite date with data from request body
     foundDivesite.date = dateUpdate;
     foundDivesite.save(function(){
       db.Divesite.findById(divesiteId)
@@ -257,7 +244,31 @@ app.put('/api/divesites/:id', function (req, res) {
       .populate('animals')
       .exec(function(err, divesite) {
         if (err) { return console.log("index error: " + err); }
-      // console.log("saved ", divesiteData.name);
+      // send back the divesite!
+      res.json(divesite);
+      });
+    });
+  });
+});
+
+// update image for a divesite
+app.put('/api/divesites/:id/image', function (req, res) {
+  // set the value of the divesite id and image update
+  console.log(req.body);
+  var divesiteId = req.params.id;
+  var imageUpdate = req.body.image;
+  // find divesite in db by id
+  db.Divesite.findOne({_id: divesiteId}, function (err, foundDivesite) {
+    if (err) { return console.log("index error: " + err); }
+    // update divesite image with data from request body
+    foundDivesite.image = imageUpdate;
+    foundDivesite.save(function(){
+      db.Divesite.findById(divesiteId)
+      .populate('place')
+      .populate('country')
+      .populate('animals')
+      .exec(function(err, divesite) {
+        if (err) { return console.log("index error: " + err); }
       // send back the divesite!
       res.json(divesite);
       });
@@ -266,13 +277,9 @@ app.put('/api/divesites/:id', function (req, res) {
 });
 
 
-
-
-
 /**********
  * PROFILE & DOCUMENTATION DATA *
  **********/
-
 
 var profile = {
   name: "Scott Whitman",
@@ -290,18 +297,20 @@ var apiDocumentation = {
   baseUrl: "https://fierce-savannah-91724.herokuapp.com/",
   endpoints: [
     {method: "GET", path: "/api", description: "Describes all available endpoints"},
-    {method: "GET", path: "/api/profile", description: "Data about me"},
-    {method: "GET", path: "/api/divesites", description: "Get all my best divesites"},
-    {method: "GET", path: "/api/divesites/:id", description: "Get one divesite"},
+    {method: "GET", path: "/api/profile", description: "Profile data about Scott Whitman"},
+    {method: "GET", path: "/api/divesites", description: "Get data on all my best divesites"},
+    {method: "GET", path: "/api/divesites/:id", description: "Get data for one of my best divesites"},
     {method: "POST", path: "/api/divesites", description: "Create a new divesite"},
-    {method: "PUT", path: "/api/divesites/:id", description: "Update the date last visited a divesite"},
+    {method: "POST", path: "/api/places", description: "Create a new divesite place"},
+    {method: "POST", path: "/api/countries", description: "Create a new divesite country"},
+    {method: "POST", path: "/api/animals", description: "Create a new animal seen at a divesite"},
     {method: "DELETE", path: "/api/divesites/:id", description: "Remove a divesite"},
-    {method: "GET", path: "/api/divesites/:divesite_id/animals", description: "Get all animals seen at a divesite"},
-    {method: "PUT", path: "/api/divesites/:divesite_id/animals", description: "Add an animal seen at a divesite"},
-    // {method: "DELETE", path: "/api/divesites/:divesite_id/animals/:animal_id", description: "Remove an animal from a divesite"}
+    {method: "GET", path: "/api/divesites/:id/animals", description: "Get all animals seen at a divesite"},
+    {method: "PUT", path: "/api/divesites/:id/animals", description: "Add an animal seen at a divesite"},
+    {method: "PUT", path: "/api/divesites/:id/date", description: "Update the date last visited a divesite"},
+    {method: "PUT", path: "/api/divesites/:id/image", description: "Update the image for a divesite"}
   ]
 }
-
 
 
 /**********

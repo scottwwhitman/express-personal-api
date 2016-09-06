@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/styles/styles.css">
 
     <!-- VENDOR SCRIPTS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
     <!-- APPLICATION SCRIPTS -->
@@ -37,6 +38,7 @@
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
@@ -66,12 +68,11 @@
             <br>
             <br>
             <button type="submit" class="btn btn-default" id="createDivesite">Create divesite</button>
-            <!-- <button type="submit" class="btn btn-default" id="updateDivesite">Update date visited</button> -->
           </form>
 
           <hr>
           <h3>DATABASE - add new places, countries and animals:</h3>
-          <h4>Note: if you can't add a new animal to a divesite, first add them to the database</h4>
+          <h4>Note: if you can't add a new animal to a divesite, first add it to the database</h4>
           <br>
           <form class="form-inline" id="newPlaceForm">
             <div class="form-group">
@@ -118,14 +119,21 @@
                 <div class="form-group">
                   <input type="text" class="form-control" name="animal" placeholder="Animal">
                 </div>
-                <button type="submit" class="btn btn-default" id="addAnimalButton">Add animal</button>
+                <button type="submit" class="btn btn-default updateButtons" id="addAnimalButton">Add animal</button>
               </form>
               <br>
               <form class="form-inline" id="updateDateForm" data-id={{_id}}>
                 <div class="form-group">
                   <input type="text" class="form-control" name="date" placeholder="Month Year">
                 </div>
-                <button type="submit" class="btn btn-default" id="updateDateButton">Update date</button>
+                <button type="submit" class="btn btn-default updateButtons" id="updateDateButton">Update date</button>
+              </form>
+              <br>
+              <form class="form-inline" id="updateImageForm" data-id={{_id}}>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="image" placeholder="Image name">
+                </div>
+                <button type="submit" class="btn btn-default updateButtons" id="updateImageButton">Update image</button>
               </form>
               {{/each}}
             </script>
@@ -134,6 +142,5 @@
         </div>
       </div>
     </div>
-
   </body>
 </html>

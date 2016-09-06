@@ -8,9 +8,6 @@ var DivesiteSchema = new Schema({
   name: String,
   date: String,
   image: String,
-  // place: String,
-  // country: String,
-  // animals: [String]
   place: {type: Schema.Types.ObjectId, ref: 'Place'},
   country: {type: Schema.Types.ObjectId, ref: 'Country'},
   animals: [{type: Schema.Types.ObjectId, ref: 'Animal'}]
